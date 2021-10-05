@@ -1,2 +1,3 @@
 # be-blog-koa2
-这是我的个人博客项目的 server 端，使用的是 koa2 框架
+
+个人博客后端，基于 Koa2 框架，使用的是 MongoDB 作为数据库
