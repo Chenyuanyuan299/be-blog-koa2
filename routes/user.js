@@ -10,7 +10,7 @@ router.post('/login', async (ctx, next) => {
   if (data.username) {
     ctx.session.username = data.username
     ctx.session.realname = data.realname
-    ctx.body = new SuccessModel()
+    ctx.body = new SuccessModel(data.realname)
     return
   }
   ctx.body = new ErrorModel('登录失败')

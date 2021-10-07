@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { getList, getListCount, newBlog, updateBlog, deleteBlog } = require('../controller/blog');
+const { getList, getListCount, getDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog');
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const loginCheck = require('../middleware/loginCheck')
 
@@ -48,10 +48,10 @@ router.get('/list', async (ctx, next) => {
   ctx.body = new SuccessModel(resData)
 });
 
-// router.get('/detail', async (ctx, next) => {
-//   const data = await getDetail(ctx.query.id)
-//   ctx.body = new SuccessModel(data)
-// });
+router.get('/detail', async (ctx, next) => {
+  const data = await getDetail(ctx.query.id)
+  ctx.body = new SuccessModel(data)
+});
 
 router.post('/new', loginCheck, async (ctx, next) => {
   const body = ctx.request.body

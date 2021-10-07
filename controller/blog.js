@@ -22,10 +22,10 @@ const getListCount = async (author) => {
   return count
 }
 
-// const getDetail = async (id) => {
-//   const blog = await Blog.findById(id)
-//   return blog
-// }
+const getDetail = async (id) => {
+  const blog = await Blog.findById(id)
+  return blog
+}
 
 const newBlog = async (blogData = {}) => {
   const title = xss(blogData.title)
@@ -70,7 +70,7 @@ const deleteBlog = async (id, author) => {
 module.exports = {
   getList,
   getListCount,
-  // getDetail,
+  getDetail,
   newBlog,
   updateBlog,
   deleteBlog
