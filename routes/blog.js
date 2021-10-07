@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { getList, getDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog');
+const { getList, getListCount, newBlog, updateBlog, deleteBlog } = require('../controller/blog');
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const loginCheck = require('../middleware/loginCheck')
 
@@ -18,22 +18,40 @@ router.get('/list', async (ctx, next) => {
       // console.error('is admin, but no login')
       return
     }
-    // 强制只能查询自己的博客
+    // 强制返回作者本人的博客
     author = ctx.session.username
   }
 
+  // 获取博客列表
   const listData = await getList(author, keyword)
+  let message = ''
+  let count = 0
+  let realname = ''
+  let username = ''
+
+  // 登录之后才能获取到用户的真实姓名和用户名
   if (ctx.session.username) {
-    ctx.body = new SuccessModel(listData, '已登录')
+    message = '已登录'
+    count = await getListCount(ctx.session.username)
+    realname = ctx.session.realname
+    username = ctx.session.username
   } else {
-    ctx.body = new SuccessModel(listData, '未登录')
+    message = '未登录'
   }
+  const resData = {
+    listData,
+    realname,
+    username,
+    count,
+    message
+  }
+  ctx.body = new SuccessModel(resData)
 });
 
-router.get('/detail', async (ctx, next) => {
-  const data = await getDetail(ctx.query.id)
-  ctx.body = new SuccessModel(data)
-});
+// router.get('/detail', async (ctx, next) => {
+//   const data = await getDetail(ctx.query.id)
+//   ctx.body = new SuccessModel(data)
+// });
 
 router.post('/new', loginCheck, async (ctx, next) => {
   const body = ctx.request.body

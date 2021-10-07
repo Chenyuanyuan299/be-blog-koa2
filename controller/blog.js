@@ -13,13 +13,19 @@ const getList = async (author, keyword) => {
   return list
 }
 
-const getDetail = async (id) => {
-  const blog = await Blog.findById(id)
-
-  // 创建时间的格式化
-
-  return blog
+const getListCount = async (author) => {
+  const Opt = {
+    author: author
+  }
+  const list = await Blog.find(Opt)
+  const count = list.length
+  return count
 }
+
+// const getDetail = async (id) => {
+//   const blog = await Blog.findById(id)
+//   return blog
+// }
 
 const newBlog = async (blogData = {}) => {
   const title = xss(blogData.title)
@@ -38,7 +44,6 @@ const newBlog = async (blogData = {}) => {
 }
 
 const updateBlog = async (id, blogData = {}) => {
-
   const title = xss(blogData.title)
   const content = xss(blogData.content)
 
@@ -64,7 +69,8 @@ const deleteBlog = async (id, author) => {
 
 module.exports = {
   getList,
-  getDetail,
+  getListCount,
+  // getDetail,
   newBlog,
   updateBlog,
   deleteBlog
