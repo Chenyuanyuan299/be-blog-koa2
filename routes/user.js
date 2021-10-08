@@ -7,13 +7,17 @@ router.prefix('/api/user')
 router.post('/login', async (ctx, next) => {
   const { username, password } = ctx.request.body
   const data = await login(username, password)
+  if (data === -1) {
+    ctx.body = new ErrorModel('用户不存在')
+    return
+  }
   if (data.username) {
     ctx.session.username = data.username
     ctx.session.realname = data.realname
     ctx.body = new SuccessModel(data.realname)
     return
   }
-  ctx.body = new ErrorModel('登录失败')
+  ctx.body = new ErrorModel('密码错误')
 })
 
 router.get('/logout', async (ctx, next) => {
