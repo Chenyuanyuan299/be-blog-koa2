@@ -9,6 +9,7 @@ const BlogSchema = mongoose.Schema(
       type: String,
       required: true
     },
+    label: String,
     content: String,
     author: {
       type: String,

@@ -22,6 +22,18 @@ const getListCount = async (author) => {
   return count
 }
 
+const getLabelList = async (author) => {
+  const Opt = {
+    author: author
+  }
+  const list = await Blog.find(Opt)
+  let labels = new Set()
+  list.forEach((element) => {
+    labels.add(element.label)
+  })
+  return labels 
+}
+
 const getDetail = async (id) => {
   const blog = await Blog.findById(id)
   return blog
@@ -29,11 +41,13 @@ const getDetail = async (id) => {
 
 const newBlog = async (blogData = {}) => {
   const title = xss(blogData.title)
+  const label = blogData.label
   const content = xss(blogData.content)
   const author = blogData.author
 
   const blog = await Blog.create({
     title,
+    label,
     content,
     author
   })
@@ -45,11 +59,12 @@ const newBlog = async (blogData = {}) => {
 
 const updateBlog = async (id, blogData = {}) => {
   const title = xss(blogData.title)
+  const label = blogData.label
   const content = xss(blogData.content)
 
   const blog = await Blog.findOneAndUpdate(
-    { _id: id },
-    { title, content},
+    { _id: id },  
+    { title, label, content},
     { new: true } // 返回更新之后的最新内容
   )
 
@@ -70,6 +85,7 @@ const deleteBlog = async (id, author) => {
 module.exports = {
   getList,
   getListCount,
+  getLabelList,
   getDetail,
   newBlog,
   updateBlog,
