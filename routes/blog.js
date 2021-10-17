@@ -15,7 +15,7 @@ router.get('/list', async (ctx, next) => {
       return
     }
     // 强制返回作者本人的博客
-    author = ctx.session.username
+    author = ctx.session.realname
   }
 
   // 获取博客列表
@@ -29,8 +29,8 @@ router.get('/list', async (ctx, next) => {
   // 登录之后才能获取到用户的真实姓名和用户名
   if (ctx.session.username) {
     message = '已登录'
-    count = await getListCount(ctx.session.username)
-    labelList = Array.from(await getLabelList(ctx.session.username))
+    count = await getListCount(ctx.session.realname)
+    labelList = Array.from(await getLabelList(ctx.session.realname))
     realname = ctx.session.realname
     username = ctx.session.username
   } else {
@@ -54,8 +54,7 @@ router.get('/detail', async (ctx, next) => {
 
 router.post('/new', loginCheck, async (ctx, next) => {
   const body = ctx.request.body
-  console.log(body)
-  body.author = ctx.session.username
+  body.author = ctx.session.realname
   const data = await newBlog(body)
   ctx.body =  new SuccessModel(data)
 });
@@ -70,7 +69,7 @@ router.post('/update', loginCheck, async (ctx, next) => {
 });
 
 router.post('/delete', loginCheck, async (ctx, next) => {
-  const author = ctx.session.username
+  const author = ctx.session.realname
   const val = await deleteBlog(ctx.query.id, author)
   if (val) {
     ctx.body =  new SuccessModel()
